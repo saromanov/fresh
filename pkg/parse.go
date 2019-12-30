@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 import (
 	"fmt"
@@ -9,8 +9,10 @@ import (
 // Dependency defines single dependency
 // in format name-tag
 type Dependency struct {
-	Name string
-	Tag  string
+	Path   string
+	Tag    string
+	Author string
+	Name   string
 }
 
 // Parse provides parsing of go.mod file
@@ -29,14 +31,30 @@ func parse(data []byte) ([]Dependency, error) {
 	response := []Dependency{}
 	for _, line := range lines {
 		// TODO: Need to generalize
-		if strings.HasPrefix(line, "git") {
-			item := strings.Split(line, " ")
+		trim := strings.TrimSpace(line)
+		if strings.HasPrefix(trim, "git") {
+			item := strings.Split(trim, " ")
+			author, name, err := getRepoAuthorAndName(item[0])
+			if err != nil {
+				return []Dependency{}, err
+			}
 			response = append(response, Dependency{
-				Name: item[0],
-				Tag:  item[1],
+				Path:   item[0],
+				Tag:    item[1],
+				Author: author,
+				Name:   name,
 			})
 		}
 	}
 
 	return response, nil
+}
+
+// retruns author of the repo from url and name
+func getRepoAuthorAndName(s string) (string, string, error) {
+	result := strings.Split(s, "/")
+	if len(result) < 1 {
+		return "", "", fmt.Errorf("unable to get author of the repo")
+	}
+	return result[1], result[2], nil
 }

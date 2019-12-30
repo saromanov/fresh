@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 func NewReleases(deps []Dependency) error {
 	client := github.NewClient(nil)
 	for _, dep := range deps {
-		releases, _, err := client.Repositories.ListReleases(context.TODO(), dep.Name, dep.Name, nil)
+		releases, _, err := client.Repositories.ListReleases(context.TODO(), dep.Author, dep.Name, nil)
 		if err != nil {
 			return fmt.Errorf("unable to get release: %v", err)
 		}

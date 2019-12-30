@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/saromanov/fresh/cmd"
+	"github.com/saromanov/fresh/pkg/cmd"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,7 +16,10 @@ func main() {
 				Name:    "check",
 				Aliases: []string{"c"},
 				Usage:   "starting of checking",
-				Action:  cmd.Check,
+				Action: func(c *cli.Context) error {
+					cmd.Check("go.mod")
+					return nil
+				},
 			},
 		},
 	}
