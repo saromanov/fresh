@@ -1,14 +1,25 @@
 package cmd
 
-import "github.com/saromanov/fresh/pkg"
+import (
+	"fmt"
+
+	"github.com/saromanov/fresh/pkg"
+)
 
 // Check provides checking of directory with go modules
 func Check(path string) error {
 	deps, err := pkg.Parse(path)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("unable to parse go.mod file: %v", err)
 	}
 
-	pkg.NewReleases(deps)
+	releases, err := pkg.NewReleases(deps)
+	if err != nil {
+		return fmt.Errorf("unable to get new releases: %v", err)
+	}
+
+	if releases == nil || len(releases) == 0 {
+		return nil
+	}
 	return nil
 }
