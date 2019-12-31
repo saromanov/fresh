@@ -21,5 +21,9 @@ func Check(path string) error {
 	if releases == nil || len(releases) == 0 {
 		return nil
 	}
+
+	for _, r := range releases {
+		pkg.Info(fmt.Sprintf("New version of: %s", r.Name))
+	}
 	return nil
 }
