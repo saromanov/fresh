@@ -11,6 +11,7 @@ import (
 type NewRelease struct {
 	Name string
 	Tag  string
+	CurrentTag string
 }
 
 // NewReleases retruns list of all new releases
@@ -30,6 +31,7 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 				nr = append(nr, &NewRelease{
 					Tag: r.GetTagName(),
 					Name: dep.Name,
+					CurrentTag: dep.Tag,
 				})
 				break
 			}
