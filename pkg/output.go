@@ -8,3 +8,8 @@ import (
 func Info(s string) {
 	color.Blue(s)
 }
+
+// Warning rprint text in red
+func Warning(s string) {
+	color.Red(s)
+}
