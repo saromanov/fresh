@@ -31,6 +31,7 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 					Tag: r.GetTagName(),
 					Name: dep.Name,
 				})
+				break
 			}
 		}
 	}
