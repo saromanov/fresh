@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/blang/semver"
+	"github.com/Masterminds/semver"
 	"github.com/google/go-github/v28/github"
 )
 
@@ -15,6 +15,7 @@ type NewRelease struct {
 
 // NewReleases retruns list of all new releases
 func NewReleases(deps []Dependency) ([]*NewRelease, error) {
+	nr := []*NewRelease{}
 	client := github.NewClient(nil)
 	for _, dep := range deps {
 		releases, _, err := client.Repositories.ListReleases(context.TODO(), dep.Author, dep.Name, nil)
@@ -23,11 +24,16 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 		}
 
 		for _, r := range releases {
-			v1, _ := semver.Make(r.GetTagName())
-			v2, _ := semver.Make(dep.Tag)
-			fmt.Println(v1.Equals(v2), r.GetTagName(), dep.Tag)
+			v1, _ := semver.NewVersion(r.GetTagName())
+			v2, _ := semver.NewVersion(dep.Tag)
+			if v1.Compare(v2) == 1 {
+				nr = append(nr, &NewRelease{
+					Tag: r.GetTagName(),
+					Name: dep.Name,
+				})
+			}
 		}
 	}
 
-	return nil, nil
+	return nr, nil
 }
