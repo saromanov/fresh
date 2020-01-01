@@ -25,11 +25,18 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 		}
 
 		for _, r := range releases {
-			v1, _ := semver.NewVersion(r.GetTagName())
-			v2, _ := semver.NewVersion(dep.Tag)
+			tag := r.GetTagName()
+			v1, err := semver.NewVersion(tag)
+			if err != nil {
+				return nil, fmt.Errorf("unable to validate version: %v", err)
+			}
+			v2, err := semver.NewVersion(dep.Tag)
+			if err != nil {
+				return nil, fmt.Errorf("unable to validate version: %v", err)
+			}
 			if v1.Compare(v2) == 1 {
 				nr = append(nr, &NewRelease{
-					Tag: r.GetTagName(),
+					Tag: tag,
 					Name: dep.Name,
 					CurrentTag: dep.Tag,
 				})

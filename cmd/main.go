@@ -17,7 +17,9 @@ func main() {
 				Aliases: []string{"c"},
 				Usage:   "starting of checking",
 				Action: func(c *cli.Context) error {
-					cmd.Check("go.mod")
+					if err := cmd.Check("go.mod"); err != nil {
+						panic(err)
+					}
 					return nil
 				},
 			},
