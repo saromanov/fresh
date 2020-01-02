@@ -3,9 +3,11 @@ package pkg
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/Masterminds/semver"
 	"github.com/google/go-github/v28/github"
+	"golang.org/x/oauth2"
 )
 
 // NewRelease defines struct for showing new releases
@@ -20,7 +22,7 @@ type NewRelease struct {
 // NewReleases retruns list of all new releases
 func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 	nr := []*NewRelease{}
-	client := github.NewClient(nil)
+	client := getGithubClient()
 	for _, dep := range deps {
 		releases, _, err := client.Repositories.ListReleases(context.TODO(), dep.Author, dep.Name, nil)
 		if err != nil {
@@ -51,4 +53,22 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 	}
 
 	return nr, nil
+}
+
+// returns Github client
+// if env.variables contains GITHUB_TOKEN
+// it retruns authentificated client
+func getGithubClient() *github.Client {
+	token := os.Getenv("GITHUB_TOKEN")
+	if token == "" {
+		return github.NewClient(nil)
+	}
+
+	ctx := context.Background()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: token},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+
+	return github.NewClient(tc)
 }

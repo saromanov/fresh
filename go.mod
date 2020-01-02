@@ -9,4 +9,5 @@ require (
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.11 // indirect
 	github.com/urfave/cli/v2 v2.1.1
+	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 )
