@@ -8,10 +8,12 @@ import (
 	"github.com/google/go-github/v28/github"
 )
 
+// NewRelease defines struct for showing new releases
 type NewRelease struct {
-	Name string
-	Tag  string
-	CurrentTag string
+	Name        string
+	Tag         string
+	CurrentTag  string
+	PublishedAt string
 }
 
 // NewReleases retruns list of all new releases
@@ -36,9 +38,10 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 			}
 			if v1.Compare(v2) == 1 {
 				nr = append(nr, &NewRelease{
-					Tag: tag,
-					Name: dep.Name,
-					CurrentTag: dep.Tag,
+					Tag:         tag,
+					Name:        dep.Name,
+					CurrentTag:  dep.Tag,
+					PublishedAt: r.GetPublishedAt().String(),
 				})
 				break
 			}

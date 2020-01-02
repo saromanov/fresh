@@ -23,7 +23,7 @@ func Check(path string) error {
 	}
 
 	for _, r := range releases {
-		pkg.Info(fmt.Sprintf("'%s' current version: %s - new version %s", r.Name, r.CurrentTag, r.Tag))
+		pkg.Info(fmt.Sprintf("'%s' current version: %s - new version %s %s", r.Name, r.CurrentTag, r.Tag, r.PublishedAt))
 	}
 	return nil
 }
