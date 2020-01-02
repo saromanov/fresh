@@ -27,6 +27,7 @@ func Check(path string) error {
 		pkg.Infof("current version: %s", r.CurrentTag)
 		pkg.Infof("new version %s", r.Tag)
 		pkg.Infof("published at %s", r.PublishedAt)
+		pkg.Infof("release description %s", r.Body)
 		fmt.Println()
 	}
 	return nil
