@@ -53,7 +53,7 @@ func parse(data []byte) ([]Dependency, error) {
 // retruns author of the repo from url and name
 func getRepoAuthorAndName(s string) (string, string, error) {
 	result := strings.Split(s, "/")
-	if len(result) < 1 {
+	if len(result) < 2 {
 		return "", "", fmt.Errorf("unable to get author of the repo")
 	}
 	return result[1], result[2], nil
