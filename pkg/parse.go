@@ -32,7 +32,7 @@ func parse(data []byte) ([]Dependency, error) {
 	for _, line := range lines {
 		// TODO: Need to generalize
 		trim := strings.TrimSpace(line)
-		if strings.HasPrefix(trim, "git") {
+		if strings.HasPrefix(trim, "github") {
 			item := strings.Split(trim, " ")
 			author, name, err := getRepoAuthorAndName(item[0])
 			if err != nil {
