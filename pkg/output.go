@@ -14,7 +14,12 @@ func Infof(f, s string) {
 	color.Blue(f, s)
 }
 
-// Warning rprint text in red
-func Warning(s string) {
-	color.Red(s)
+// Text returns formatted string
+func Text(s string) string {
+	return color.GreenString(s)
+}
+
+// Warningf rprint text in red
+func Warningf(f, s string) {
+	color.Red(f, s)
 }
