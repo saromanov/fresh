@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/saromanov/fresh/pkg/cmd"
@@ -18,7 +19,7 @@ func main() {
 				Usage:   "starting of checking",
 				Action: func(c *cli.Context) error {
 					if err := cmd.Check("go.mod"); err != nil {
-						panic(err)
+						log.Fatalf("unable to check: %v", err)
 					}
 					return nil
 				},
