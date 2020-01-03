@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -54,7 +55,7 @@ func parse(data []byte) ([]Dependency, error) {
 func getRepoAuthorAndName(s string) (string, string, error) {
 	result := strings.Split(s, "/")
 	if len(result) < 2 {
-		return "", "", fmt.Errorf("unable to get author of the repo")
+		return "", "", errors.New("unable to get author of the repo")
 	}
 	return result[1], result[2], nil
 }
