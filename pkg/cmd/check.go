@@ -20,7 +20,7 @@ func Check(path string) error {
 	}
 
 	if releases == nil || len(releases) == 0 {
-		log.Infof("all dependencies is up to date")
+		log.Printf("all dependencies is up to date")
 		return nil
 	}
 
