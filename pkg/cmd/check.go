@@ -3,12 +3,40 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/saromanov/fresh/pkg"
+	"github.com/urfave/cli/v2"
 )
 
-// Check provides checking of directory with go modules
-func Check(path string) error {
+// CHeck is entry point for the app
+func Check(args []string) {
+	app := &cli.App{
+		Name:  "fresh",
+		Usage: "Checking of newest deps",
+		Commands: []*cli.Command{
+			{
+				Name:    "check",
+				Aliases: []string{"c"},
+				Usage:   "starting of checking",
+				Action: func(c *cli.Context) error {
+					if err := check("go.mod"); err != nil {
+						log.Fatalf("unable to check: %v", err)
+					}
+					return nil
+				},
+			},
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		return
+	}
+}
+
+// check provides checking of directory with go modules
+func check(path string) error {
 	deps, err := pkg.Parse(path)
 	if err != nil {
 		return fmt.Errorf("unable to parse go.mod file: %v", err)
