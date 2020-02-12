@@ -16,11 +16,20 @@ func Check(args []string) {
 		Usage: "Checking of newest deps",
 		Commands: []*cli.Command{
 			{
-				Name:    "check",
-				Aliases: []string{"c"},
-				Usage:   "starting of checking",
+				Name:  "check",
+				Usage: "starting of checking",
 				Action: func(c *cli.Context) error {
 					if err := check("go.mod"); err != nil {
+						log.Fatalf("unable to check: %v", err)
+					}
+					return nil
+				},
+			},
+			{
+				Name:  "update",
+				Usage: "updating of deps",
+				Action: func(c *cli.Context) error {
+					if err := update("go.mod"); err != nil {
 						log.Fatalf("unable to check: %v", err)
 					}
 					return nil
@@ -60,5 +69,9 @@ func check(path string) error {
 		pkg.Infof("release description:\n %s", pkg.Text(r.Body))
 		fmt.Println()
 	}
+	return nil
+}
+
+func update(path string) error {
 	return nil
 }
