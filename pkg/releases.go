@@ -31,15 +31,11 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 
 		for _, r := range releases {
 			tag := r.GetTagName()
-			v1, err := semver.NewVersion(tag)
+			equal, err := compareReleases(tag, dep.Tag)
 			if err != nil {
-				return nil, fmt.Errorf("unable to validate version: %v", err)
+				return nil, fmt.Errorf("unable to compare releases: %v", err)
 			}
-			v2, err := semver.NewVersion(dep.Tag)
-			if err != nil {
-				return nil, fmt.Errorf("unable to validate version: %v", err)
-			}
-			if v1.Compare(v2) == 1 {
+			if equal {
 				nr = append(nr, &NewRelease{
 					Tag:         tag,
 					Name:        dep.Name,
@@ -53,6 +49,18 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 	}
 
 	return nr, nil
+}
+
+func compareReleases(tag, depTag string) (bool, error) {
+	v1, err := semver.NewVersion(tag)
+	if err != nil {
+		return false, fmt.Errorf("unable to validate version: %v", err)
+	}
+	v2, err := semver.NewVersion(depTag)
+	if err != nil {
+		return false, fmt.Errorf("unable to validate version: %v", err)
+	}
+	return v1.Compare(v2) == 1, nil
 }
 
 // returns Github client
