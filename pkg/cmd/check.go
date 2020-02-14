@@ -9,6 +9,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+
+https://medium.com/faun/managing-dependency-and-module-versioning-using-go-modules-c7c6da00787a
 // CHeck is entry point for the app
 func Check(args []string) {
 	app := &cli.App{

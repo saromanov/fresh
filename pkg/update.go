@@ -6,8 +6,12 @@ import (
 	"os/exec"
 )
 
-// Update provides updating of deps
+// Update provides updating of deps.
+// It might be updated specific dep or all deps
 func Update(path string) error {
+	if path == "" {
+		return fmt.Errorf("path is not defined")
+	}
 	cmd := exec.Command("go", "get", "-u", path)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
