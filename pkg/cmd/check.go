@@ -9,9 +9,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-
-https://medium.com/faun/managing-dependency-and-module-versioning-using-go-modules-c7c6da00787a
-// CHeck is entry point for the app
+// Check is entry point for the app
 func Check(args []string) {
 	app := &cli.App{
 		Name:  "fresh",
@@ -65,6 +63,7 @@ func check(path string) error {
 
 	for _, r := range releases {
 		pkg.Warningf("'%s'", r.Name)
+		pkg.Infof("url: %s", r.URL)
 		pkg.Infof("current version: %s", pkg.Text(r.CurrentTag))
 		pkg.Infof("new version %s", pkg.Text(r.Tag))
 		pkg.Infof("published at %s", pkg.Text(r.PublishedAt))

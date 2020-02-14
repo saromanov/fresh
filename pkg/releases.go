@@ -17,6 +17,7 @@ type NewRelease struct {
 	CurrentTag  string
 	PublishedAt string
 	Body        string
+	URL         string
 }
 
 // NewReleases retruns list of all new releases
@@ -42,6 +43,7 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 					CurrentTag:  dep.Tag,
 					PublishedAt: r.GetPublishedAt().String(),
 					Body:        r.GetBody(),
+					URL:         r.GetHTMLURL(),
 				})
 				break
 			}
