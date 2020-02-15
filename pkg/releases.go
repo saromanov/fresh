@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/Masterminds/semver"
 	"github.com/google/go-github/v28/github"
@@ -43,7 +44,7 @@ func NewReleases(deps []Dependency) ([]*NewRelease, error) {
 					CurrentTag:  dep.Tag,
 					PublishedAt: r.GetPublishedAt().String(),
 					Body:        r.GetBody(),
-					URL:         r.GetHTMLURL(),
+					URL:         prepareURL(r.GetHTMLURL()),
 				})
 				break
 			}
@@ -81,4 +82,12 @@ func getGithubClient() *github.Client {
 	tc := oauth2.NewClient(ctx, ts)
 
 	return github.NewClient(tc)
+}
+
+// prepareURL returns url to the repo
+func prepareURL(path string) string {
+	if !strings.Contains(path, "/releases") {
+		return path
+	}
+	return strings.Split(path, "/releases")[0]
 }
