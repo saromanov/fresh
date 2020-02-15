@@ -46,16 +46,10 @@ func Check(args []string) {
 
 // check provides checking of directory with go modules
 func check(path string) error {
-	deps, err := pkg.Parse(path)
+	releases, err := getReleases(path)
 	if err != nil {
-		return fmt.Errorf("unable to parse go.mod file: %v", err)
+		return err
 	}
-
-	releases, err := pkg.NewReleases(deps)
-	if err != nil {
-		return fmt.Errorf("unable to get new releases: %v", err)
-	}
-
 	if releases == nil || len(releases) == 0 {
 		log.Printf("all dependencies is up to date")
 		return nil
@@ -74,5 +68,27 @@ func check(path string) error {
 }
 
 func update(path string) error {
-	return nil
+	releases, err := getReleases(path)
+	if err != nil {
+		return err
+	}
+	if releases == nil || len(releases) == 0 {
+		log.Printf("all dependencies is up to date")
+		return nil
+	}
+
+	return pkg.Update(path)
+}
+
+func getReleases(path string) ([]*pkg.NewRelease, error) {
+	deps, err := pkg.Parse(path)
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse go.mod file: %v", err)
+	}
+
+	releases, err := pkg.NewReleases(deps)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get new releases: %v", err)
+	}
+	return releases, nil
 }
