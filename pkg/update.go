@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 // Update provides updating of deps.
@@ -13,7 +14,8 @@ func Update(path string, releases []*NewRelease) error {
 		return fmt.Errorf("path is not defined")
 	}
 	url := func(r *NewRelease) string {
-		return fmt.Sprintf("%s@%s", r.URL, r.Tag)
+		res := strings.Split(r.URL, "https://")[1]
+		return fmt.Sprintf("%s@%s", res, r.Tag)
 	}
 	for _, r := range releases {
 		if err := update(url(r)); err != nil {
