@@ -14,12 +14,18 @@ func Check(args []string) {
 	app := &cli.App{
 		Name:  "fresh",
 		Usage: "Checking of newest deps",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "update-all",
+				Usage: "updating all depencencies",
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:  "check",
 				Usage: "starting of checking",
 				Action: func(c *cli.Context) error {
-					if err := check("go.mod"); err != nil {
+					if err := check(c, "go.mod"); err != nil {
 						log.Fatalf("unable to check: %v", err)
 					}
 					return nil
@@ -45,7 +51,7 @@ func Check(args []string) {
 }
 
 // check provides checking of directory with go modules
-func check(path string) error {
+func check(c *cli.Context, path string) error {
 	releases, err := getReleases(path)
 	if err != nil {
 		return err
@@ -63,6 +69,10 @@ func check(path string) error {
 		pkg.Infof("published at %s", pkg.Text(r.PublishedAt))
 		pkg.Infof("release description:\n %s", pkg.Text(r.Body))
 		fmt.Println()
+	}
+	if c.Bool("update-all") {
+		pkg.Info("updating of dependencies...")
+		pkg.Update(path)
 	}
 	return nil
 }
