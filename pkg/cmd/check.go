@@ -72,7 +72,7 @@ func check(c *cli.Context, path string) error {
 	}
 	if c.Bool("update-all") {
 		pkg.Info("updating of dependencies...")
-		pkg.Update(path)
+		return pkg.Update(path, releases)
 	}
 	return nil
 }
@@ -87,7 +87,7 @@ func update(path string) error {
 		return nil
 	}
 
-	return pkg.Update(path)
+	return pkg.Update(path, releases)
 }
 
 func getReleases(path string) ([]*pkg.NewRelease, error) {
