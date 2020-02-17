@@ -22,9 +22,9 @@ type NewRelease struct {
 }
 
 // NewReleases retruns list of all new releases
-func NewReleases(deps []Dependency) ([]*NewRelease, error) {
+func NewReleases(token string, deps []Dependency) ([]*NewRelease, error) {
 	nr := []*NewRelease{}
-	client := getGithubClient()
+	client := getGithubClient(token)
 	for _, dep := range deps {
 		releases, _, err := client.Repositories.ListReleases(context.TODO(), dep.Author, dep.Name, nil)
 		if err != nil {

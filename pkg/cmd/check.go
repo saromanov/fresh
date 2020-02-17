@@ -39,7 +39,7 @@ func Check(args []string) {
 				Name:  "update",
 				Usage: "updating of deps",
 				Action: func(c *cli.Context) error {
-					if err := update("go.mod"); err != nil {
+					if err := update(c, "go.mod"); err != nil {
 						log.Fatalf("unable to check: %v", err)
 					}
 					return nil
@@ -56,7 +56,7 @@ func Check(args []string) {
 
 // check provides checking of directory with go modules
 func check(c *cli.Context, path string) error {
-	releases, err := getReleases(path)
+	releases, err := getReleases(c, path)
 	if err != nil {
 		return err
 	}
@@ -81,8 +81,8 @@ func check(c *cli.Context, path string) error {
 	return nil
 }
 
-func update(path string) error {
-	releases, err := getReleases(path)
+func update(c *cli.Context, path string) error {
+	releases, err := getReleases(c, path)
 	if err != nil {
 		return err
 	}
@@ -94,13 +94,13 @@ func update(path string) error {
 	return pkg.Update(path, releases)
 }
 
-func getReleases(path string) ([]*pkg.NewRelease, error) {
+func getReleases(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
 	deps, err := pkg.Parse(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse go.mod file: %v", err)
 	}
 
-	releases, err := pkg.NewReleases(deps)
+	releases, err := pkg.NewReleases(c.String("github-token"), deps)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get new releases: %v", err)
 	}
