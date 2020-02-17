@@ -69,8 +69,9 @@ func compareReleases(tag, depTag string) (bool, error) {
 // returns Github client
 // if env.variables contains GITHUB_TOKEN
 // it retruns authentificated client
-func getGithubClient() *github.Client {
-	token := os.Getenv("GITHUB_TOKEN")
+// or it contains from command line variables
+func getGithubClient(tokenInp string) *github.Client {
+	token := getGithubToken(tokenInp)
 	if token == "" {
 		return github.NewClient(nil)
 	}
@@ -82,6 +83,13 @@ func getGithubClient() *github.Client {
 	tc := oauth2.NewClient(ctx, ts)
 
 	return github.NewClient(tc)
+}
+
+func getGithubToken(token string) string {
+	if token == "" {
+		return os.Getenv("GITHUB_TOKEN")
+	}
+	return token
 }
 
 // prepareURL returns url to the repo

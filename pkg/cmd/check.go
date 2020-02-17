@@ -19,6 +19,10 @@ func Check(args []string) {
 				Name:  "update-all",
 				Usage: "updating all depencencies",
 			},
+			&cli.StringFlag{
+				Name:  "github-token",
+				Usage: "token for access to Github",
+			},
 		},
 		Commands: []*cli.Command{
 			{
