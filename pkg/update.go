@@ -19,13 +19,16 @@ func Update(path string, releases []*NewRelease) error {
 	}
 	for _, r := range releases {
 		if err := update(url(r)); err != nil {
-			return fmt.Errorf("unable to update release: %v", err)
+			fmt.Println("unable to update release: %v", err)
 		}
 	}
 	return nil
 }
 
 func update(path string) error {
+	if path == "" {
+		return fmt.Errorf("path is not defined")
+	}
 	cmd := exec.Command("go", "get", "-u", path)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

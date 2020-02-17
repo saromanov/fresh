@@ -10,8 +10,8 @@ func Info(s string) {
 }
 
 // Infof prints text in blue with formatting
-func Infof(f, s string) {
-	color.Blue(f, s)
+func Infof(f string, s ...interface{}) {
+	color.Blue(f, s...)
 }
 
 // Text returns formatted string
@@ -20,6 +20,6 @@ func Text(s string) string {
 }
 
 // Warningf rprint text in red
-func Warningf(f, s string) {
-	color.Red(f, s)
+func Warningf(f string, s ...interface{}) {
+	color.Red(f, s...)
 }
