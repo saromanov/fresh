@@ -113,18 +113,26 @@ func checkAndUpdate(c *cli.Context, path string) error {
 	}
 
 	fmt.Println("releases: ", releases)
-	fmt.Println("Select packages which need to update(with comma separated")
+	fmt.Println("Select packages which need to update(with comma separated). Or press n to exist")
 	var line string
 	fmt.Scan(&line)
 	if line == "" {
 		return fmt.Errorf("empty line")
 	}
+	if line == "n" {
+		return nil
+	}
 	splitted := strings.Split(line, ",")
 	if len(splitted) == 0 {
 		return fmt.Errorf("empty line")
 	}
-	fmt.Println(splitted)
-	return nil
+	nums := pkg.StrToIntSlice(splitted)
+	updatesReleases := []*pkg.NewRelease{}
+	for _, s := range nums {
+		updatesReleases = append(updatesReleases, releases[s])
+
+	}
+	return pkg.Update(path, updatesReleases)
 }
 
 func getReleases(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
