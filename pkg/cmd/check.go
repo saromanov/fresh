@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/saromanov/fresh/pkg"
 	"github.com/urfave/cli/v2"
@@ -29,7 +30,7 @@ func Check(args []string) {
 				Name:  "check",
 				Usage: "starting of checking",
 				Action: func(c *cli.Context) error {
-					if err := check(c, "go.mod"); err != nil {
+					if _, err := check(c, "go.mod"); err != nil {
 						log.Fatalf("unable to check: %v", err)
 					}
 					return nil
@@ -65,14 +66,14 @@ func Check(args []string) {
 }
 
 // check provides checking of directory with go modules
-func check(c *cli.Context, path string) error {
+func check(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
 	releases, err := getReleases(c, path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if releases == nil || len(releases) == 0 {
 		log.Printf("all dependencies is up to date")
-		return nil
+		return nil, nil
 	}
 
 	for _, r := range releases {
@@ -86,9 +87,9 @@ func check(c *cli.Context, path string) error {
 	}
 	if c.Bool("update-all") {
 		pkg.Info("updating of dependencies...")
-		return pkg.Update(path, releases)
+		return nil, pkg.Update(path, releases)
 	}
-	return nil
+	return releases, nil
 }
 
 func update(c *cli.Context, path string) error {
@@ -106,7 +107,24 @@ func update(c *cli.Context, path string) error {
 
 // provides checking of the deps and then update it
 func checkAndUpdate(c *cli.Context, path string) error {
+	releases, err := check(c, path)
+	if err != nil {
+		return err
+	}
 
+	fmt.Println("releases: ", releases)
+	fmt.Println("Select packages which need to update(with comma separated")
+	var line string
+	fmt.Scan(&line)
+	if line == "" {
+		return fmt.Errorf("empty line")
+	}
+	splitted := strings.Split(line, ",")
+	if len(splitted) == 0 {
+		return fmt.Errorf("empty line")
+	}
+	fmt.Println(splitted)
+	return nil
 }
 
 func getReleases(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
