@@ -19,8 +19,10 @@ func Update(path string, releases []*NewRelease) error {
 	}
 	for _, r := range releases {
 		if err := update(url(r)); err != nil {
-			fmt.Println("unable to update release: %v", err)
+			fmt.Printf("unable to update release: %v", err)
+			continue
 		}
+		Infof("release updated: %s %s", r.Name, r.Tag)
 	}
 	return nil
 }

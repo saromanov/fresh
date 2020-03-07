@@ -36,6 +36,16 @@ func Check(args []string) {
 				},
 			},
 			{
+				Name:  "check-and-update",
+				Usage: "checking of the deps and then update it",
+				Action: func(c *cli.Context) error {
+					if err := checkAndUpdate(c, "go.mod"); err != nil {
+						log.Fatalf("unable to check and update: %v", err)
+					}
+					return nil
+				},
+			},
+			{
 				Name:  "update",
 				Usage: "updating of deps",
 				Action: func(c *cli.Context) error {
@@ -92,6 +102,11 @@ func update(c *cli.Context, path string) error {
 	}
 
 	return pkg.Update(path, releases)
+}
+
+// provides checking of the deps and then update it
+func checkAndUpdate(c *cli.Context, path string) error {
+
 }
 
 func getReleases(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
