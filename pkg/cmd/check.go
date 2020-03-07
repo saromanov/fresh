@@ -76,8 +76,8 @@ func check(c *cli.Context, path string) ([]*pkg.NewRelease, error) {
 		return nil, nil
 	}
 
-	for _, r := range releases {
-		pkg.Warningf("'%s'", r.Name)
+	for i, r := range releases {
+		pkg.Warningf("%d. '%s'", i+1, r.Name)
 		pkg.Infof("url: %s", r.URL)
 		pkg.Infof("current version: %s", pkg.Text(r.CurrentTag))
 		pkg.Infof("new version %s", pkg.Text(r.Tag))
@@ -112,8 +112,7 @@ func checkAndUpdate(c *cli.Context, path string) error {
 		return err
 	}
 
-	fmt.Println("releases: ", releases)
-	fmt.Println("Select packages which need to update(with comma separated). Or press n to exist")
+	pkg.Infof("Select packages which need to update(with comma separated). Or press n to exist")
 	var line string
 	fmt.Scan(&line)
 	if line == "" {
@@ -127,9 +126,9 @@ func checkAndUpdate(c *cli.Context, path string) error {
 		return fmt.Errorf("empty line")
 	}
 	nums := pkg.StrToIntSlice(splitted)
-	updatesReleases := []*pkg.NewRelease{}
-	for _, s := range nums {
-		updatesReleases = append(updatesReleases, releases[s])
+	updatesReleases := make([]*pkg.NewRelease, len(nums))
+	for i, s := range nums {
+		updatesReleases[i] = releases[s]
 
 	}
 	return pkg.Update(path, updatesReleases)
